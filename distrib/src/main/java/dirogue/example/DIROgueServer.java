@@ -2,7 +2,11 @@ package dirogue.example;
 
 import java.io.IOException;
 
-import dirogue.example.code_squelette.*;
+import dirogue.example.code_squelette.Exterieur;
+import dirogue.example.code_squelette.Piece;
+import dirogue.example.code_squelette.PieceNotFoundException;
+import dirogue.example.code_squelette.RencontreType;
+import dirogue.example.code_squelette.Server;
 
 /**
  * Classe représentant le serveur pour l'application DIROgue.
@@ -43,7 +47,16 @@ public class DIROgueServer {
 
 			s.addEventHandler((cmd, cmdArgs) -> {
 				if (cmd.equals("corridor")) {
-					//TODO: Implémenter le handler et ajouter un corridor.
+					if (cmdArgs.length == 2) {
+						int id1 = Integer.parseInt(cmdArgs[0]);
+						int id2 = Integer.parseInt(cmdArgs[0]);
+						try {
+							l.ajouteCorridor(id1, id2);
+							System.out.println("corridor " + id1 + " " + id2 + "ajouté.");
+						} catch (PieceNotFoundException e) {
+							System.out.println("Erreur lors de l'ajout du corridor"  + id1 + " " + id2 + " " + e.getMessage());
+						}
+					}
 				}
 			});
 
@@ -56,7 +69,15 @@ public class DIROgueServer {
 
 			s.addEventHandler((cmd, cmdArgs) -> {
 				if (cmd.equals("save")) {
-					//TODO: Sauvegarder le fichier de rapport de l'aventure.
+					if (cmdArgs.length == 1) {
+						String save_path = cmdArgs[0];
+						try {
+							m.sauvegarderRapport(save_path);
+						}
+        				catch (IOException e) {
+            				System.out.println("Erreur lors du save de " + save_path + " " + e.getMessage());
+        				}
+					}
 				}
 			});
 

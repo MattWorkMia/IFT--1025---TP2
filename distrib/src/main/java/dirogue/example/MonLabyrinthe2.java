@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-import dirogue.example.code_squelette.*;
+import dirogue.example.code_squelette.Exterieur;
+import dirogue.example.code_squelette.Labyrinthe;
+import dirogue.example.code_squelette.Piece;
+import dirogue.example.code_squelette.PieceNotFoundException;
 
 /**
  * La classe MonLabyrinthe2 implémente l'interface Labyrinthe et Serializable.
@@ -57,7 +59,13 @@ public class MonLabyrinthe2 implements Labyrinthe, Serializable {
     }
 
     public void ajouteCorridor(int e1ID, int e2ID) throws PieceNotFoundException {
-        //TODO: Ajouter un corridor entre deux pièces avec les identifiants fournis
+        if (getPieceByID(e1ID) == null)
+            pieces.add(getPieceByID(e1ID));
+
+        if (getPieceByID(e2ID) == null)
+            pieces.add(getPieceByID(e2ID));
+
+        addEdge(getPieceByID(e1ID), getPieceByID(e1ID));
     }
 
     /**
@@ -84,8 +92,13 @@ public class MonLabyrinthe2 implements Labyrinthe, Serializable {
      * @return Un tableau de pièces connectées à la pièce donnée.
      */
     public Piece[] getPiecesConnectees(Piece e) {
-        //TODO: Trouver les pièces connectées
-        return new Piece[0];
+        if(!pieces.contains(e)) return null;
+        List<Integer> voisins = adjList.get(e.getID());
+        Piece[] resultat = new Piece[voisins.size()];
+        for(int i=0; i < voisins.size(); i++){
+            resultat[i] = getPieceByID(voisins.get(i));
+        }
+        return resultat;
     }
 
     private void addEdge(Piece e1, Piece e2) {

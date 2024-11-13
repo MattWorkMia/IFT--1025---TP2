@@ -14,14 +14,18 @@ import java.util.Scanner;
  */
 public class DIROgueClient {
 	public static void main(String[] args) {
-		String serverAddress = null;
-		int serverPort = 0;
-
+		String serverAddress = "localhost";
+		int serverPort = 1370;
 		Socket socket = null;
-		PrintWriter out = null; // utilisé pour écrire dans le socket avec des commandes comme println()
+		PrintWriter out = null;
 
-		// TODO: Se connecter au serveur.
-
+		try {
+			socket = new Socket(serverAddress, serverPort);
+			out = new PrintWriter(socket.getOutputStream(), true); // utilisé pour écrire dans le socket avec des commandes comme println()
+		} 
+		catch (IOException e){
+			System.out.println("Erreur lors de la connexion au serveur: " + e.getMessage());
+		}
 		Scanner scanner = new Scanner(System.in);
 		String input;
 
@@ -31,8 +35,16 @@ public class DIROgueClient {
 
 			if (input.equals("load")) {
 				System.out.println("Entrez le chemin du fichier que vous souhaitez charger :");
-
-				// TODO: Lire le fichier et envoyer les commandes au serveur ligne par ligne.
+				String load_path = scanner.nextLine().trim();
+				try (BufferedReader reader = new BufferedReader(new FileReader(load_path))) {
+            		String line;
+            		while ((line = reader.readLine()) != null) {
+                		out.println(line);
+            		}
+        		} 
+				catch (IOException e) {
+					System.out.println("Erreur lors du load de: " + load_path + " - " + e.getMessage());
+        		}
 
 			} else if (input.equals("save")) {
 				System.out.println(" Entrez le chemin où vous voulez sauvegarder le rapport :");
